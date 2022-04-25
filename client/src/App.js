@@ -2,26 +2,25 @@ import { useMutation, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { CREATE_TODO } from "./mutations/user";
-import { GET_ALL_USERS, GET_USER } from "./query/user";
+import { GET_TODOS, GET_ALL_USERS } from "./query/user";
 
 function App() {
-    const { data, loading, error, refetch } = useQuery(GET_ALL_USERS);
-    // const { data: oneUser, loading: loadingOneUser } = useQuery(GET_USER, {variables:{
-    // 	id: 1
-    // }});
-    // console.log(oneUser)
+    const { data: usersData } = useQuery(GET_ALL_USERS);
+    const users = usersData?.getTodos;
+    const { data, loading, refetch } = useQuery(GET_TODOS);
+
     const [createTodo] = useMutation(CREATE_TODO);
-    const [users, setUsers] = useState([]);
+    const [todos, setTodos] = useState([]);
     const [username, setUsername] = useState("");
     const [todo, setTodo] = useState("");
 
     useEffect(() => {
         if (!loading) {
-            setUsers(data.getAllUsers);
+            setTodos(data.getTodos);
         }
     }, [data]);
 
-    const addUser = (e) => {
+    const addTodo = (e) => {
         e.preventDefault();
         createTodo({
             variables: {
@@ -34,12 +33,8 @@ function App() {
             console.log(data);
             setTodo("");
             setUsername("");
+            refetch();
         });
-    };
-
-    const getAll = (e) => {
-        e.preventDefault();
-        refetch();
     };
 
     if (loading) {
@@ -67,18 +62,28 @@ function App() {
                     />
 
                     <div className="buttons">
-                        <button onClick={addUser}>Create ToDo</button>
-                        <button onClick={getAll}>Get all users</button>
+                        <button onClick={addTodo}>Create ToDo</button>
+                        {/* <button onClick={getAll}>Show users</button> */}
                     </div>
                 </div>
             </form>
             <div>
-				<h3>ToDo list:</h3>
-                {users.length ? users.map((user) => (
-                    <div key={user.id}>
-                        {user.id}. {user.username} {user.age}
-                    </div>
-                )) : <span>all done</span>}
+                <h3>ToDo list:</h3>
+                {todos.length ? (
+                    todos.map((todo, idx) => (
+                        <div key={todo.id}>
+                            {idx + 1}. {todo.username}: "{todo.text}"
+                        </div>
+                    ))
+                ) : (
+                    <span>all done</span>
+                )}
+            </div>
+            <div>
+                <h3>Users:</h3>
+                {users?.map((user) => (
+                    <div key={user.id}>{user.username}</div>
+                ))}
             </div>
         </div>
     );

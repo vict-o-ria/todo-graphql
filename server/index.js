@@ -1,52 +1,31 @@
-const mongoose = require("mongoose");
-const express = require("express");
-const { graphqlHTTP } = require("express-graphql");
-const cors = require("cors");
-const schema = require("./schema");
-const users = [];
-// const users = [{ id: 1, username: "Vika", age: 25 }];
+import mongoose from "mongoose";
+import express from "express";
+import { graphqlHTTP } from "express-graphql";
+import cors from "cors";
+// import {ApolloServer, gql} from "apollo-server-express"
+import schema from "./schema.js";
+import { root } from "./resolvers.js";
 
-const app = express();
-app.use(cors());
+// const server = new ApolloServer({
+//     typeDefs: schema,
+//     resolvers,
+// });
 
-const createItem = (input) => {
-    const id = Date.now();
-    return {
-        id,
-        ...input,
-    };
-};
-
-const root = {
-    getAllUsers: () => {
-        return users;
-    },
-    getUser: ({ id }) => {
-        return users.find((user) => user.id == id);
-    },
-    createUser: ({ input }) => {
-        const user = createItem(input);
-        users.push(user);
-        return user;
-    },
-    createTodo: (props) => {
-        const { input } = props;
-        console.log(props);
-        return createItem(input);
-    },
-};
-
-app.use(
-    "/graphql",
-    graphqlHTTP({
-        graphiql: true,
-        schema,
-        rootValue: root,
-    })
-);
+// server.applyMiddleware({ app });
 
 async function start() {
     try {
+        const app = express();
+        app.use(cors());
+        app.use(
+            "/graphql",
+            graphqlHTTP({
+                graphiql: true,
+                schema,
+                rootValue: root,
+            })
+        );
+
         await mongoose.connect("mongodb://localhost:27017/mongo", {
             useNewUrlParser: true,
             //   useFindAndModify: false,

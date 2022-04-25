@@ -1,4 +1,4 @@
-const {buildSchema} = require("graphql")
+import { buildSchema } from "graphql";
 
 const schema = buildSchema(`
 
@@ -25,15 +25,13 @@ const schema = buildSchema(`
     }
 
     type Query {
-        getAllUsers: [User]
-        getUser(id: ID): User
+        getTodos: [Todo!]!
     }
 
     type Mutation {
-        createUser(input: UserInput): User
         createTodo(input: TodoInput): Todo
     }
 
-`)
+`);
 
-module.exports = schema;
+export default schema;
