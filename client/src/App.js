@@ -3,6 +3,14 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { CREATE_TODO } from "./mutations/user";
 import { GET_TODOS, GET_ALL_USERS } from "./query/user";
+import {
+    $inputName,
+    $inputTodo,
+    changeName,
+    changeTodo,
+    reset,
+} from "./models/input";
+import { useStore, useEvent } from "effector-react";
 
 function App() {
     const { data: usersData } = useQuery(GET_ALL_USERS);
@@ -11,8 +19,11 @@ function App() {
 
     const [createTodo] = useMutation(CREATE_TODO);
     const [todos, setTodos] = useState([]);
-    const [username, setUsername] = useState("");
-    const [todo, setTodo] = useState("");
+    const username = useStore($inputName);
+    const todo = useStore($inputTodo);
+    // for testing
+    const changeNameEvent = useEvent(changeName);
+    const changeTodoEvent = useEvent(changeTodo);
 
     useEffect(() => {
         if (!loading) {
@@ -31,8 +42,7 @@ function App() {
             },
         }).then(({ data }) => {
             console.log(data);
-            setTodo("");
-            setUsername("");
+            reset();
             refetch();
         });
     };
@@ -50,20 +60,19 @@ function App() {
                     <input
                         id="todo"
                         value={todo}
-                        onChange={(e) => setTodo(e.target.value)}
+                        onChange={(e) => changeTodoEvent(e.target.value)}
                         type="text"
                     />
                     <label htmlFor="username">Your name:</label>
                     <input
                         id="username"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => changeNameEvent(e.target.value)}
                         type="text"
                     />
 
                     <div className="buttons">
                         <button onClick={addTodo}>Create ToDo</button>
-                        {/* <button onClick={getAll}>Show users</button> */}
                     </div>
                 </div>
             </form>
