@@ -2,16 +2,8 @@ import mongoose from "mongoose";
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import cors from "cors";
-// import {ApolloServer, gql} from "apollo-server-express"
 import schema from "./schema.js";
 import { root } from "./resolvers.js";
-
-// const server = new ApolloServer({
-//     typeDefs: schema,
-//     resolvers,
-// });
-
-// server.applyMiddleware({ app });
 
 async function start() {
     try {
@@ -25,8 +17,7 @@ async function start() {
                 rootValue: root,
             })
         );
-
-        await mongoose.connect("mongodb://localhost:27017/mongo", {
+        await mongoose.connect("mongodb://mongodb:27017/mongo", {
             useNewUrlParser: true,
             //   useFindAndModify: false,
         });
@@ -35,7 +26,7 @@ async function start() {
 
         app.listen(5000, () => console.log("server on port 5000"));
     } catch (e) {
-        console.log(e);
+        console.log("!!", e);
     }
 }
 

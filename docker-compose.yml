@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  react-app:
+    image: react-app
+    stdin_open: true
+    ports:
+      - 3000:3000
+    networks:
+      - todo-graphql
+  api-server:
+    image: api-server
+    ports:
+      - 5000:5000
+    networks:
+      - todo-graphql
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    networks:
+      - todo-graphql
+    volumes:
+      - data:/data/db
+networks:
+  todo-graphql:
+    driver: bridge
+volumes:
+  data:
+    driver: local

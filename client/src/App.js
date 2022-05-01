@@ -40,8 +40,7 @@ function App() {
                     text: todo,
                 },
             },
-        }).then(({ data }) => {
-            console.log(data);
+        }).then(() => {
             reset();
             refetch();
         });
