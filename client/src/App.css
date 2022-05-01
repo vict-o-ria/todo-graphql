@@ -1,0 +1,38 @@
+.App {
+  text-align: center;
+}
+
+.App form {
+  display: flex;
+  justify-content: center;
+}
+
+.form-container {
+  padding: 16px;
+  border: 1px solid burlywood;
+  background-color: antiquewhite;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.form-container label {
+  align-self: start;
+  margin-top: 12px;
+}
+
+.buttons {
+  margin-top: 16px;
+  align-self: flex-end;
+}
+
+.buttons button {
+  margin-left: 8px;
+  border: none;
+  background-color: cornflowerblue;
+  padding: 4px 12px;
+  border-radius: 6px;
+  color: white;
+}
